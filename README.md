@@ -3,7 +3,7 @@
 
 ## I. Introduction
 
-Learn Skaffold by applying to simple webapp written by Java and VueJS. 
+Learn Skaffold by applying to simple webapp written by Java and VueJS.
 
 Back-end is written by Java, build by Jib. Front-end is written by VueJS, build by Docker. Both are deployed by kubectl CLI.
 
@@ -13,7 +13,7 @@ Following items are required to finish this exercise:
 
 - Kubernetes (k8s) Cluster.
 - Kubectl connected to the k8s Cluster.
-- Skaffold.
+- Skaffold 1.3.1 or later.
 - Docker Hub account.
 - Intellij to debug Java appliction.
 - Clone this repository.
@@ -31,27 +31,33 @@ Login to your docker hub account.
 
     docker login
 
-Than input your username and password.
+Than input your username and password to login.
 
-skaffold config set default-repo `<repository>`
+Config default repository for Skaffold.
 
-Note: Replate `<repository>` by your Docker hub username (ex: tuanvxm).
+    skaffold config set default-repo `<repository>`
+
+Note: Replace `<repository>` by your Docker hub username (ex: tuanvxm).
 
 ### 3. Develop Java project in dev mode - skaffold dev
-Take a look on project structure
+
+Take a look on project structure:
+
 -  **Dockerfile** Build definition for Docker
 -  **DeployDefinition.yaml** Deploy definition for kubernetes
 -  **skaffold.yaml ** Build and deploy definition for Skaffold.
 
-Now deploy using
+Now deploy Java project using:
 
     skaffold dev
+
+**Note:** By default, Skaffold will automatically clean all related resources when dev sessions is stopped, you may want to use `--cleanup=false` to prevent this action.
 
 Skaffold will trigger maven to build project using Jib, push image to Docker Hub and deploy application to Kubernetes.
 
 Now you will see skaffold build, deploy and than stream logs from kubernetes pod to local terminal.
 
-Now run following command to get learn-skaffold-backend service `EXTERNAL-IP`
+Now run following command to get learn-skaffold-backend service `EXTERNAL-IP`:
 
     kubectl get svc
 
@@ -83,7 +89,27 @@ Now deploy using `skaffold run -- tail`
 
 **Note:** `--tail` is option to get logs of deployed application.
 
-### 5. Try debug Java project remotely using Intellij
+### 5. Debug Java project remotely using Intellij
+
+In this section, we will debug Java application remotely with `Inteillj and Cloud Code plugin`.
+
+Beside `Java`, Cloud Code also support `Kotlin, Node.js and Go`.
+
+Install Cloud Code plugin, from `Intellij > File > Settings > Plugin`. 
+
+//TODO image
+
+Create Cloud Code config as following, specify `default image repository` (your Docker Hub account)
+
+//TODO image
+
+**Note:** You may need to down grade `apiVersion` in `skaffold.yaml` to `skaffold/v2alpha2` if you get following error:
+
+//TODO image
+
+Add debug point to any controller, access the related api and see the magic.
+
+//TODO image
 
 ### 6. Using multiple profiles for dev and prod
 

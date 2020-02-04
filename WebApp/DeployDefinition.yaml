@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: learn-skaffold-backend
+  name: learn-skaffold-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: learn-skaffold-backend
+  template:
+    metadata:
+      labels:
+        run: learn-skaffold-backend
+    spec:
+      containers:
+      - image: learn-skaffold-backend
+        name: learn-skaffold-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: learn-skaffold-backend
+  name: learn-skaffold-backend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: learn-skaffold-backend
+

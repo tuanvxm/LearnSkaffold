@@ -15,7 +15,7 @@ public class ColorController {
         return "Green";
     }
 
-    @GetMapping(path = "/getPurple")
+    @GetMapping(path = "/getBlue")
     public String getBlue() {
         return "Blue";
     }

@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: webapp
+build:
+  artifacts:
+  - image: learn-skaffold-backend
+    jib: {}
+deploy:
+  kubectl:
+    manifests:
+    - DeployDefinition.yaml

@@ -46,7 +46,7 @@ Note: Replace `<repository>` by your Docker Hub username (ex: tuanvxm).
 Take a look on project structure:
 
 -  **DeployDefinition.yaml** Deploy definition for kubernetes
--  **skaffold.yaml ** Build and deploy definition for Skaffold.
+-  **skaffold.yaml** Build and deploy definition for Skaffold.
 
 **Note:** This project doesn't include Dockerfile because it is built with Jib, the configuration for Jib is contained in `pom.xml`.
 

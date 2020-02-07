@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: web-ui
+build:
+  artifacts:
+  - image: learn-skaffold-frontend
+deploy:
+  kubectl:
+    manifests:
+    - DeployDefinition.yaml

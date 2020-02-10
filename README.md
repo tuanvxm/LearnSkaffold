@@ -13,12 +13,11 @@ This example focuses on how to achieve Continuous Development on Kubernetes plat
 
 Following items are required to finish this exercise:
 
-- Skaffold 1.3.1 or later. Install intruction can be found at https://skaffold.dev/docs/install/
+- Skaffold v1.3.1 or later. Install intruction can be found at https://skaffold.dev/docs/install/
 - Kubernetes (k8s) Cluster.
 - Kubectl connected to the k8s Cluster.
 - Docker Hub account.
-- Intellij to debug Java appliction.
-- Clone this repository.
+- Intellij version 2019.1 or later.
 
 ## III. Steps
 ### 1. Setup kubernetes namespace
@@ -43,7 +42,7 @@ Note: Replace `<repository>` by your Docker Hub username (ex: tuanvxm).
 
 ### 3. Develop Java project in dev mode - skaffold dev
 
-Take a look on project structure:
+Source code for WebApp is placed on `WebApp folder`. Take a look on project structure:
 
 -  **DeployDefinition.yaml** Deploy definition for kubernetes
 -  **skaffold.yaml** Build and deploy definition for Skaffold.
@@ -52,15 +51,13 @@ Take a look on project structure:
 
 //TODO image
 
-Now deploy Java project using:
+Now run this project in dev mode using:
 
     skaffold dev
 
-**Note:** By default, Skaffold will automatically clean all related resources when dev sessions is stopped, you may want to use `skaffold dev --cleanup=false` to prevent this action.
+**Note:** By default, when dev sessions is stopped, Skaffold will automatically clean all related resources (docker images, k8s deployment and service, etc.). You may want to use `skaffold dev --cleanup=false` to prevent this action.
 
-Skaffold will trigger maven to build project, push image to Docker Hub and deploy application to Kubernetes.
-
-Now you will see skaffold build, deploy and than stream logs from kubernetes pod to local terminal.
+Skaffold will trigger maven to build project, push image to Docker Hub. deploy application to Kubernetes and forward logs from k8s pod to local terminal.
 
 //TODO image
 
@@ -82,21 +79,40 @@ You will see Skaffold automatically re-deploy application when code is saved. Ch
 
 ### 4. Deploy VueJS one time - skaffold run
 
-**Note:** Due to VueJS long build duration, you may consider using skaffold run instead of skaffold dev.
+**Note:** Due to VueJS long build duration, you may consider using `skaffold run` instead of `skaffold dev`.
 
-Init Skaffold
+Source code for WebUI is placed on `WebUI folder`. Take a look on project structure:
+
+-  **DeployDefinition.yaml** Deploy definition for kubernetes
+-  **Dockerfile** Build definition for Docker.
+
+This project doesn't have skaffold.yaml, we need to generate it.
 
 Run `skaffold init` and type `y -> Enter` to accept.
 
-Skaffold will generate a simple `skaffold.yaml` automatically based on `Dockerfile` and `DeployDefinition.yaml`
-
-**Note:** skaffold.yaml is definition file which instruct Skaffold to build and deploy our project.
-
-We will need to modify this file a bit before we can use it.
+Skaffold will generate a simple `skaffold.yaml` automatically based on `Dockerfile` and `DeployDefinition.yaml`.
 
 Now deploy using `skaffold run -- tail`
 
 **Note:** `--tail` is option to get logs of deployed application.
+
+Now run following command to get learn-skaffold-frontend service `EXTERNAL-IP`:
+
+    kubectl get svc
+
+//TODO image
+
+Check if application is running correctly by access `http://<EXTERNAL-IP>`.
+
+Click `Get Red` button, you will get following error.
+
+
+
+To fix this error, update `serverAddress` by correct back-end EXTERNAL-IP at `web-ui\src\components\HelloWorld.vue`
+
+//TODO image
+
+Terminate and re-run `skaffold run --tail` to re-deploy application.
 
 ### 5. Debug Java project remotely using Intellij
 
@@ -108,7 +124,7 @@ Install Cloud Code plugin, from `Intellij > File > Settings > Plugin`.
 
 ![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/84979872_2908824212493747_7825021824483196928_n.png)
 
-Create Cloud Code config as following, specify `default image repository` (your Docker Hub account)
+Create Cloud Code run configuration as following, specify `default image repository` (your Docker Hub account)
 
 ![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/83520518_884298008678361_4135457291572871168_n.png)
 
@@ -118,11 +134,9 @@ Create Cloud Code config as following, specify `default image repository` (your 
 
 ![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/83995890_2205602299747074_6245479998593957888_n.png)
 
-Add debug point to any controller, access the related api and see the magic.
+Add debug point to any controller, access the corresponding api and see the magic.
 
 ![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/84659750_491885838182005_5119805109382938624_n.png)
-
-### 6. Using multiple profiles for dev and prod
 
 ## Extend A: Config Jib for Maven project
 
@@ -130,7 +144,7 @@ Add build plugin to `pom.xml`
 
 //TODO image
 
-Now you can try build Docker image using `mvn compile jib:dockerBuild -Dimage=test-jib`
+Now you can try build Docker image using `mvn compile jib:dockerBuild -Dimage=<image name>`
 
 ## References:
 

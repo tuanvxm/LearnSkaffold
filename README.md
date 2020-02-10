@@ -49,7 +49,7 @@ Source code for WebApp is placed on `WebApp folder`. Take a look on project stru
 
 **Note:** This project doesn't include Dockerfile because it is built with Jib, the configuration for Jib is contained in `pom.xml`.
 
-//TODO image
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/ConfigureJib.PNG)
 
 Now run this project in dev mode using:
 
@@ -59,21 +59,26 @@ Now run this project in dev mode using:
 
 Skaffold will trigger maven to build project, push image to Docker Hub. deploy application to Kubernetes and forward logs from k8s pod to local terminal.
 
-//TODO image
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/terminal-dev.PNG)
 
 Now run following command to get learn-skaffold-backend service `EXTERNAL-IP`:
 
     kubectl get svc
 
-![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/84834021_178454553380896_6037797258722803712_n.png)
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/get-svc-java.png)
 
 Check if application is running correctly by access `http://<EXTERNAL-IP>:8080/getRed`.
 
-//TODO image
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/get-red.PNG)
 
 Add Blue controller as following to  `/src/main/java/com/skaffold/demo/controller/ColorController.java`
 
-![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/84898516_3058396700845429_7877484837118935040_n.png)
+	@GetMapping(path = "/getBlue")
+    public String getBlue() {
+        return "Blue";
+    }
+
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/getBlue.PNG)
 
 You will see Skaffold automatically re-deploy application when code is saved. Check if new API is deployed correctly by access `http://<EXTERNAL-IP>:8080/getBlue`.
 
@@ -90,6 +95,8 @@ This project doesn't have skaffold.yaml, we need to generate it.
 
 Run `skaffold init` and type `y -> Enter` to accept.
 
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/skaffold-init.PNG)
+
 Skaffold will generate a simple `skaffold.yaml` automatically based on `Dockerfile` and `DeployDefinition.yaml`.
 
 Now deploy using `skaffold run -- tail`
@@ -100,17 +107,17 @@ Now run following command to get learn-skaffold-frontend service `EXTERNAL-IP`:
 
     kubectl get svc
 
-//TODO image
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/get-svc-vuejs.PNG)
 
 Check if application is running correctly by access `http://<EXTERNAL-IP>`.
 
 Click `Get Red` button, you will get following error.
 
-
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/get-red-failed.PNG)
 
 To fix this error, update `serverAddress` by correct back-end EXTERNAL-IP at `web-ui\src\components\HelloWorld.vue`
 
-//TODO image
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/server-address.PNG)
 
 Terminate and re-run `skaffold run --tail` to re-deploy application.
 
@@ -142,7 +149,13 @@ Add debug point to any controller, access the corresponding api and see the magi
 
 Add build plugin to `pom.xml`
 
-//TODO image
+	<plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.0.0</version>
+    </plugin>
+
+![](https://tuanvxm-mix-files.s3-ap-southeast-1.amazonaws.com/git/skaffold/ConfigureJib.PNG)
 
 Now you can try build Docker image using `mvn compile jib:dockerBuild -Dimage=<image name>`
 

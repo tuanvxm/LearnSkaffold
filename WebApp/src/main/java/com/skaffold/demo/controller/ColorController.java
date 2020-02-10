@@ -16,9 +16,4 @@ public class ColorController {
     public void checkRed() {
 
     }
-
-    @GetMapping(path = "/getBlue")
-    public String getBlue() {
-        return "Blue";
-    }
 }
